@@ -1,0 +1,21 @@
+﻿body {
+    background-image: url("../Assets/images/bg.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 1600px 800px;
+    background-position: center;
+    text-align: center;
+}
+
+canvas {
+    border-radius: 10px;
+    text-align: center;
+   
+    margin-top:2%;
+    
+}
+
+.game {
+    width: 80%;
+    margin: 0 auto;
+}
