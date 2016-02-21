@@ -26,6 +26,7 @@ var config;
         function Game() {
         }
         Game.FPS = 60;
+        Game.REELS = 3;
         return Game;
     })();
     config.Game = Game;

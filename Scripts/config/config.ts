@@ -19,5 +19,6 @@
     // Game Constants
     export class Game {
         public static FPS: number = 60;
+        public static REELS: number = 3;
     }
 }
