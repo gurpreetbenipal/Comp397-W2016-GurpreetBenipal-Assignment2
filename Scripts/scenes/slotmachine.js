@@ -23,13 +23,8 @@ var scenes;
             this._blanks = 0;
             this._currentBet = 0;
             this._win = 0;
-            this._loss = 0;
             this._playerCredits = 1000;
             this._jackpot = 5000;
-            //private _winNumber: number = 0;
-            //private _lossNumber: number = 0;
-            //private _winningRatio: number = 0;
-            //private _turn: number = 0;
             this._betline = ["", "", ""];
         }
         // PUBLIC METHODS +++++++++++++++++++++
@@ -78,19 +73,19 @@ var scenes;
             this.addChild(this._shutdownButton);
             this._shutdownButton.on("click", this._shutdownButtonClick, this);
             // add SpinResult Label to the scene
-            this._spinResultLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 298, 381, false);
+            this._spinResultLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 298, 379, false);
             this._spinResultLabel.textAlign = "right";
             this.addChild(this._spinResultLabel);
             //add Jackpot Label to the scene
-            this._jackpotMoneyLabel = new objects.Label("$" + this._jackpot.toString(), "bold 16px Cambria", "#000000", 476, 223, false);
+            this._jackpotMoneyLabel = new objects.Label("$" + this._jackpot.toString(), "bold 16px Cambria", "#000000", 476, 220, false);
             this._jackpotMoneyLabel.textAlign = "right";
             this.addChild(this._jackpotMoneyLabel);
             // add Player Credits Label to the scene
-            this._playerCreditsLabel = new objects.Label("$" + this._playerCredits.toString(), "bold 16px Cambria", "#000000", 188, 381, false);
+            this._playerCreditsLabel = new objects.Label("$" + this._playerCredits.toString(), "bold 16px Cambria", "#000000", 188, 379, false);
             this._playerCreditsLabel.textAlign = "right";
             this.addChild(this._playerCreditsLabel);
             //add Bet Label to the scene
-            this._betLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 411, 381, false);
+            this._betLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 411, 379, false);
             this._betLabel.textAlign = "right";
             this.addChild(this._betLabel);
             //add Result Message Label to the scene
@@ -178,7 +173,6 @@ var scenes;
         /*Method to reset everything */
         SlotMachine.prototype._resetAll = function () {
             this._win = 0;
-            this._loss = 0;
             this._currentBet = 0;
             this._playerCredits = 1000;
             this._jackpot = 5000;
@@ -277,11 +271,13 @@ var scenes;
         SlotMachine.prototype._displayPlayerAccount = function () {
             // reset player's bet to zero
             this._currentBet = 0;
+            this._win = 0;
             this._betLabel.text = "$" + this._currentBet.toString();
             this._jackpotMoneyLabel.text = "$" + this._jackpot.toString();
             this._playerCreditsLabel.text = "$" + this._playerCredits.toString();
         };
         SlotMachine.prototype._makeBet = function (betAmount) {
+            this._spinResultLabel.text = "$" + this._win.toString();
             if (betAmount <= this._playerCredits) {
                 createjs.Sound.play("CoinSound"); // Play the coin sound on button clicked
                 console.log("Bet " + betAmount + " Credit");
@@ -311,9 +307,12 @@ var scenes;
         SlotMachine.prototype._resetButtonClick = function (event) {
             createjs.Sound.play("ButtonPressSound"); // Play the Clicked sound on Reset button clicked
             console.log("Reset the Game!");
+            this._spinButton.mouseEnabled = (this._spinButton.mouseEnabled == false) ? true : this._spinButton.mouseEnabled;
             this._resetAll();
             this._resetFruitWheel();
             this._displayPlayerAccount();
+            this._spinResultLabel.text = "$" + this._win.toString();
+            this._resultMsgLabel.text = "Welcome Again";
         };
         SlotMachine.prototype._shutdownButtonClick = function (event) {
             console.log("Shutdown the Game!");
@@ -334,6 +333,24 @@ var scenes;
                 for (var i = 0; i < config.Game.REELS; i++) {
                     this._reels[i].image = assets.getResult(bitmap[i]);
                 }
+                /*
+            var spinInterval:number = setInterval(function() {
+                      for (var i = 0; i < config.Game.REELS; i++) {
+                          reel[i] = Math.floor(Math.random() * 8 + 1);
+                          this._reels[i].image = assets.getResult(reel[i].toString());
+                      }
+                      stop += 1;
+                      if (stop >= 23) { clearInterval(spinInterval); }
+                  }, 90);
+                  console.log("Spin those reels!");
+                  finalImageResult = this._spinReels();
+                  console.log(finalImageResult);
+                  setTimeout(function() {
+                      // Iterate over the number of reels
+                      for (var i = 0; i < config.Game.REELS; i++) {
+                          this._reels[i].image = assets.getResult(finalImageResult[i]);
+                      }
+                  }, 2100);*/
                 this._determineWinnings();
                 this._displayPlayerAccount();
             }
