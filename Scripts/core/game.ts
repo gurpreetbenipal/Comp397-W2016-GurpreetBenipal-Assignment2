@@ -36,6 +36,15 @@ var assetData:objects.Asset[] = [
     {id: "orange", src:"../../Assets/images/orange.png"},
     {id: "seven", src:"../../Assets/images/banana.png"},
     
+    {id: "1", src:"../../Assets/images/1.png"},
+    {id: "2", src:"../../Assets/images/2.png"},
+    {id: "3", src:"../../Assets/images/3.png"},
+    {id: "4", src:"../../Assets/images/4.png"},
+    {id: "5", src:"../../Assets/images/5.png"},
+    {id: "6", src:"../../Assets/images/6.png"},
+    {id: "7", src:"../../Assets/images/7.png"},
+    {id: "8", src:"../../Assets/images/8.png"},
+    
     {id: "ShutdownSound", src:"../../Assets/audio/shutdown.wav"},
     {id: "GameStartSound", src:"../../Assets/audio/gamestart.wav"},
     {id: "ButtonPressSound", src:"../../Assets/audio/buttonpress.wav"},
@@ -128,5 +137,9 @@ function changeScene(): void {
             break;
     }
 
+    
+    //preload();
+    
     console.log(currentScene.numChildren);
 }
+window.onload = preload;

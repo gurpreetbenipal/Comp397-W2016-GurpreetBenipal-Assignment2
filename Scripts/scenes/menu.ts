@@ -20,7 +20,7 @@ module scenes {
                 "bold 24px Cambiria", 
                 "#800000", 
                 config.Screen.CENTER_X, 
-                config.Screen.CENTER_Y-50);
+                config.Screen.CENTER_Y-50,true);
             this.addChild(this._welcomeLabel);
                    
             // add the START button to the MENU scene

@@ -16,7 +16,7 @@ var scenes;
         // Start Method
         GameOver.prototype.start = function () {
             // add the WELCOME Label to the MENU scene
-            this._gameOverLabel = new objects.Label("GAME OVER", "bold 24px Cambiria", "#800000", config.Screen.CENTER_X, config.Screen.CENTER_Y - 50);
+            this._gameOverLabel = new objects.Label("GAME OVER", "bold 24px Cambiria", "#800000", config.Screen.CENTER_X, config.Screen.CENTER_Y - 50, true);
             this.addChild(this._gameOverLabel);
             // add the START button to the MENU scene
             this._startOverButton = new objects.Button("StartOverButton", config.Screen.CENTER_X, config.Screen.CENTER_Y + 20, true);

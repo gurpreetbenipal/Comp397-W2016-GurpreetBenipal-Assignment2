@@ -16,7 +16,7 @@ var scenes;
         // Start Method
         Menu.prototype.start = function () {
             // add the WELCOME Label to the MENU scene
-            this._welcomeLabel = new objects.Label("Click on the START button to start the Game", "bold 24px Cambiria", "#800000", config.Screen.CENTER_X, config.Screen.CENTER_Y - 50);
+            this._welcomeLabel = new objects.Label("Click on the START button to start the Game", "bold 24px Cambiria", "#800000", config.Screen.CENTER_X, config.Screen.CENTER_Y - 50, true);
             this.addChild(this._welcomeLabel);
             // add the START button to the MENU scene
             this._startButton = new objects.Button("StartButton", config.Screen.CENTER_X, config.Screen.CENTER_Y + 20, true);
