@@ -1,11 +1,11 @@
-// MENU SCENE
+// SLOT_MACHINE SCENE
+
 module scenes {
-    //var images: createjs.Bitmap[] = [];
-    //var imageContainers: createjs.Container[] = [];
     export class SlotMachine extends objects.Scene {
+        
         //PRIVATE INSTANCE VARIABLES ++++++++++++
         
-        
+        /* Declaration of Buttons */
         private _slotmachineImage: createjs.Bitmap;
         private _bet1Button: objects.Button;
         private _bet50Button: objects.Button;
@@ -14,43 +14,49 @@ module scenes {
         private _resetButton: objects.Button;
         private _shutdownButton: objects.Button;
 
-        private _reels: createjs.Bitmap[];
-
-        private _grapes = 0;
-        private _bananas = 0;
-        private _oranges = 0;
-        private _cherries = 0;
-        private _bars = 0;
-        private _bells = 0;
-        private _sevens = 0;
-        private _blanks = 0;
-
-
+        /* Declaration of Text Labels */
         private _resultMsgLabel: objects.Label;
         private _betLabel: objects.Label;
         private _playerCreditsLabel: objects.Label;
         private _spinResultLabel: objects.Label;
         private _jackpotMoneyLabel: objects.Label;
 
+        /* Declaration of Fruit Tally Variables */
+        private _grapes : number = 0;
+        private _bananas : number = 0;
+        private _oranges : number = 0;
+        private _cherries : number = 0;
+        private _bars : number = 0;
+        private _bells : number = 0;
+        private _sevens : number = 0;
+        private _blanks : number = 0;
+
+        /* Declaration of Monetary Variables */
         private _currentBet: number = 0;
         private _win: number = 0;
         private _playerCredits: number = 1000;
         private _jackpot: number = 5000;
-     
-        private _betline = ["", "", ""];
-      
+        
+
+        /* Declaration of Bitmap Variable */
+        private _reels : createjs.Bitmap[];
+        private _smiley : createjs.Bitmap;
+        
+        private _betline:string[] = ["", "", ""];
+        
+
 
         // CONSTRUCTOR ++++++++++++++++++++++
         constructor() {
             super();
-
         }
         
         // PUBLIC METHODS +++++++++++++++++++++
         
         // Start Method
         public start(): void {
-
+           
+           // Reset all Monetary values
             this._resetAll();
             
             // add background image to the scene
@@ -103,22 +109,22 @@ module scenes {
             this._shutdownButton.on("click", this._shutdownButtonClick, this); 
         
             // add SpinResult Label to the scene
-            this._spinResultLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 298, 379, false);
+            this._spinResultLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 298, 378, false);
             this._spinResultLabel.textAlign = "right";
             this.addChild(this._spinResultLabel);
         
             //add Jackpot Label to the scene
-            this._jackpotMoneyLabel = new objects.Label("$" + this._jackpot.toString(), "bold 16px Cambria", "#000000", 476, 220, false);
+            this._jackpotMoneyLabel = new objects.Label("$" + this._jackpot.toString(), "bold 16px Cambria", "#000000", 476, 219, false);
             this._jackpotMoneyLabel.textAlign = "right";
             this.addChild(this._jackpotMoneyLabel); 
            
             // add Player Credits Label to the scene
-            this._playerCreditsLabel = new objects.Label("$" + this._playerCredits.toString(), "bold 16px Cambria", "#000000", 188, 379, false);
+            this._playerCreditsLabel = new objects.Label("$" + this._playerCredits.toString(), "bold 16px Cambria", "#000000", 188, 378, false);
             this._playerCreditsLabel.textAlign = "right";
             this.addChild(this._playerCreditsLabel);
         
             //add Bet Label to the scene
-            this._betLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 411, 379, false);
+            this._betLabel = new objects.Label("$" + this._currentBet.toString(), "bold 16px Cambria", "#000000", 411, 378, false);
             this._betLabel.textAlign = "right";
             this.addChild(this._betLabel);
             
@@ -129,6 +135,13 @@ module scenes {
             
             // Initialize Array of Reels 
             this._initializeReelsArray();
+            
+            //Initialize the Smiley Images
+            this._smiley =  new createjs.Bitmap(assets.getResult("HappySmiley"));
+            this._smiley.x = 428;
+            this._smiley.y = 38;
+            this.addChild(this._smiley);
+           
             
             // add this scene to the global stage container
             stage.addChild(this);
@@ -291,6 +304,7 @@ module scenes {
             this._playerCredits += this._win;
             this._resultMsgLabel.color = "#FFFFFF";
             this._resultMsgLabel.text = "You Won";
+            this._smiley.image = assets.getResult("WinSmiley");
             this._checkForJackPot();
             this._spinResultLabel.text = "+$" + this._win.toString();
             this._resetFruitWheel();
@@ -301,6 +315,7 @@ module scenes {
             console.log("Loss");
             this._resultMsgLabel.color = "#FFFFFF";
             this._resultMsgLabel.text = "You Loss";
+            this._smiley.image = assets.getResult("SadSmiley");
             this._spinResultLabel.text = "-$" + this._currentBet.toString();
             this._resetFruitWheel();
         }
@@ -314,6 +329,7 @@ module scenes {
             if (random1 == random2) {                         // If both random numbers are same, the player won the Jackpot
                 console.log("Jackpot Won")
                 createjs.Sound.play("JackpotWinSound");       // Play the Jackpot Win Sound
+                this._smiley.image = assets.getResult("JackpotSmiley");
                 this._resultMsgLabel.color = "#FFCC00";       // Change the color of Result Message Label to Yellow
                 this._resultMsgLabel.text = "Congrats! You Won a Jackpot";      //Change the Text of Result Message Label
                 this._playerCredits += this._jackpot;         // Add the Jackpot Money to the Player Credits
@@ -330,11 +346,14 @@ module scenes {
             this._betLabel.text = "$" + this._currentBet.toString();
             this._jackpotMoneyLabel.text = "$" + this._jackpot.toString();
             this._playerCreditsLabel.text = "$" + this._playerCredits.toString();
-           
+
         }
 
         private _makeBet(betAmount: number): void {
             this._spinResultLabel.text = "$" + this._win.toString();
+            this._resultMsgLabel.text = "SPIN THE REEL";
+            this._smiley.image = assets.getResult("HappySmiley");
+            
             if (betAmount <= this._playerCredits) {
                 createjs.Sound.play("CoinSound");       // Play the coin sound on button clicked
                 console.log("Bet " + betAmount + " Credit");
@@ -346,7 +365,7 @@ module scenes {
                 //this._spinButton.mouseEnabled = true;
             }
             else {
-                this._spinButton.mouseEnabled = false;
+                //this._spinButton.mouseEnabled = false;
                 this._resultMsgLabel.color = "#FFFFFF";
                 this._resultMsgLabel.text = "Insufficient Money";
                 alert("Insufficient Money");
@@ -376,6 +395,10 @@ module scenes {
             this._displayPlayerAccount();
             this._spinResultLabel.text = "$" + this._win.toString();
             this._resultMsgLabel.text = "Welcome Again";
+            this._smiley.image = assets.getResult("HappySmiley");
+            for (var i = 0; i < config.Game.REELS; i++) {
+                        this._reels[i].image = assets.getResult("blank");
+                    }
         }
 
         private _shutdownButtonClick(event: createjs.MouseEvent): void {
@@ -390,42 +413,34 @@ module scenes {
         private _spinButtonClick(event: createjs.MouseEvent): void {
             var stop: number = 0;
             var reel: number[] = [0, 0, 0];
-            var finalImageResult: string[];
 
             if (this._currentBet == 0)
                 alert("Invalid Bet Amount");
-
-
             else {
                 createjs.Sound.play("SpinnerSound");      // Play the Spinner sound on SPIN button clicked
-              
-                
-               /* for (var i: number = 0; i < config.Game.REELS; i++) {
-                    this._reels[i].image = assets.getResult(bitmap[i]);
-                }*/
-                    
-               
-              var spinInterval:number = setInterval(() => {
-                for (var i = 0; i < config.Game.REELS; i++) {
-                          reel[i] = Math.floor(Math.random() * 8 + 1);
-                          this._reels[i].image = assets.getResult(reel[i].toString());
-                      }
-                      stop += 1;
-                      if (stop >= 60) { clearInterval(spinInterval); }
-            },100);
-             var bitmap: string[] = this._spinReels();
-                  setTimeout(() => { 
-                      console.log("Spin those reels!");
-                      console.log(bitmap);
-                      // Iterate over the number of reels
-                      for (var i = 0; i < config.Game.REELS; i++) {
-                          this._reels[i].image = assets.getResult(bitmap[i]);
-                      }
-                      this._determineWinnings();
-                      this._displayPlayerAccount();
-                  }, 6000);
+                var spinInterval: number = setInterval(() => {
+                    for (var i = 0; i < config.Game.REELS; i++) {
+                        reel[i] = Math.floor(Math.random() * 8 + 1);
+                        this._reels[i].image = assets.getResult(reel[i].toString());
+                    }
+                    stop += 1;
+                    if (stop >= 60) { clearInterval(spinInterval); }
+                }, 100);
 
-                
+                var bitmap: string[] = this._spinReels();
+
+                setTimeout(() => {
+                    console.log("Spin those reels!");
+                    console.log(bitmap);
+                    // Iterate over the number of reels
+                    for (var i = 0; i < config.Game.REELS; i++) {
+                        this._reels[i].image = assets.getResult(bitmap[i]);
+                    }
+                    this._determineWinnings();
+                    this._displayPlayerAccount();
+                }, 6000);
+
+
             }
 
         }
