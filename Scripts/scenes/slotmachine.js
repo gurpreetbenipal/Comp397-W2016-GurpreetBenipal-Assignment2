@@ -322,6 +322,7 @@ var scenes;
             changeScene();
         };
         SlotMachine.prototype._spinButtonClick = function (event) {
+            var _this = this;
             var stop = 0;
             var reel = [0, 0, 0];
             var finalImageResult;
@@ -329,30 +330,30 @@ var scenes;
                 alert("Invalid Bet Amount");
             else {
                 createjs.Sound.play("SpinnerSound"); // Play the Spinner sound on SPIN button clicked
+                /* for (var i: number = 0; i < config.Game.REELS; i++) {
+                     this._reels[i].image = assets.getResult(bitmap[i]);
+                 }*/
+                var spinInterval = setInterval(function () {
+                    for (var i = 0; i < config.Game.REELS; i++) {
+                        reel[i] = Math.floor(Math.random() * 8 + 1);
+                        _this._reels[i].image = assets.getResult(reel[i].toString());
+                    }
+                    stop += 1;
+                    if (stop >= 60) {
+                        clearInterval(spinInterval);
+                    }
+                }, 100);
                 var bitmap = this._spinReels();
-                for (var i = 0; i < config.Game.REELS; i++) {
-                    this._reels[i].image = assets.getResult(bitmap[i]);
-                }
-                /*
-            var spinInterval:number = setInterval(function() {
-                      for (var i = 0; i < config.Game.REELS; i++) {
-                          reel[i] = Math.floor(Math.random() * 8 + 1);
-                          this._reels[i].image = assets.getResult(reel[i].toString());
-                      }
-                      stop += 1;
-                      if (stop >= 23) { clearInterval(spinInterval); }
-                  }, 90);
-                  console.log("Spin those reels!");
-                  finalImageResult = this._spinReels();
-                  console.log(finalImageResult);
-                  setTimeout(function() {
-                      // Iterate over the number of reels
-                      for (var i = 0; i < config.Game.REELS; i++) {
-                          this._reels[i].image = assets.getResult(finalImageResult[i]);
-                      }
-                  }, 2100);*/
-                this._determineWinnings();
-                this._displayPlayerAccount();
+                setTimeout(function () {
+                    console.log("Spin those reels!");
+                    console.log(bitmap);
+                    // Iterate over the number of reels
+                    for (var i = 0; i < config.Game.REELS; i++) {
+                        _this._reels[i].image = assets.getResult(bitmap[i]);
+                    }
+                    _this._determineWinnings();
+                    _this._displayPlayerAccount();
+                }, 6000);
             }
         };
         return SlotMachine;

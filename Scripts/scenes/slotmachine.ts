@@ -399,33 +399,33 @@ module scenes {
             else {
                 createjs.Sound.play("SpinnerSound");      // Play the Spinner sound on SPIN button clicked
               
-                var bitmap: string[] = this._spinReels();
-                for (var i: number = 0; i < config.Game.REELS; i++) {
+                
+               /* for (var i: number = 0; i < config.Game.REELS; i++) {
                     this._reels[i].image = assets.getResult(bitmap[i]);
-                }
+                }*/
                     
-                /* 
-            var spinInterval:number = setInterval(function() {
-                      for (var i = 0; i < config.Game.REELS; i++) {
+               
+              var spinInterval:number = setInterval(() => {
+                for (var i = 0; i < config.Game.REELS; i++) {
                           reel[i] = Math.floor(Math.random() * 8 + 1);
                           this._reels[i].image = assets.getResult(reel[i].toString());
                       }
                       stop += 1;
-                      if (stop >= 23) { clearInterval(spinInterval); }
-                  }, 90);
-                  console.log("Spin those reels!");
-                  finalImageResult = this._spinReels();
-                  console.log(finalImageResult);
-                  setTimeout(function() { 
+                      if (stop >= 60) { clearInterval(spinInterval); }
+            },100);
+             var bitmap: string[] = this._spinReels();
+                  setTimeout(() => { 
+                      console.log("Spin those reels!");
+                      console.log(bitmap);
                       // Iterate over the number of reels
                       for (var i = 0; i < config.Game.REELS; i++) {
-                          this._reels[i].image = assets.getResult(finalImageResult[i]);
+                          this._reels[i].image = assets.getResult(bitmap[i]);
                       }
-                  }, 2100);*/
+                      this._determineWinnings();
+                      this._displayPlayerAccount();
+                  }, 6000);
 
-                this._determineWinnings();
-
-                this._displayPlayerAccount();
+                
             }
 
         }
