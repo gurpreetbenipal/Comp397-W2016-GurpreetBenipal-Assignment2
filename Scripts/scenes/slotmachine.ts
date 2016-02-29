@@ -413,7 +413,7 @@ module scenes {
                     spinner += 1;
                     if (spinner >= 60)
                         clearInterval(spinInterval);        // Clear the interval time
-                }, 100);                    // 60 * 100 = 6000 = 6 sec (It means the spinner will spin upto 6 sec)
+                }, 99);                    // 60 * 100 = 6000 = 6 sec (It means the spinner will spin upto 6 sec)
 
                 var bitmap: string[] = this._spinReels();
 

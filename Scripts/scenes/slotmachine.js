@@ -342,7 +342,7 @@ var scenes;
                     spinner += 1;
                     if (spinner >= 60)
                         clearInterval(spinInterval); // Clear the interval time
-                }, 100); // 60 * 100 = 6000 = 6 sec (It means the spinner will spin upto 6 sec)
+                }, 99); // 60 * 100 = 6000 = 6 sec (It means the spinner will spin upto 6 sec)
                 var bitmap = this._spinReels();
                 setTimeout(function () {
                     console.log("Spin those reels!");
