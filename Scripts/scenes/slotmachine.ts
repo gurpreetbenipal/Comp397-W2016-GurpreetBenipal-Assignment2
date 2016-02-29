@@ -427,7 +427,7 @@ module scenes {
                     this._determineWinnings();          
                     this._displayPlayerAccount();
                      this._enableAllButtons();
-                }, 6000);
+                }, 6200);
                
             }   
         }

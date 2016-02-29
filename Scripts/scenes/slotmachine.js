@@ -354,7 +354,7 @@ var scenes;
                     _this._determineWinnings();
                     _this._displayPlayerAccount();
                     _this._enableAllButtons();
-                }, 6000);
+                }, 6200);
             }
         };
         /* Method to disable all the buttons while spinning the reel */
