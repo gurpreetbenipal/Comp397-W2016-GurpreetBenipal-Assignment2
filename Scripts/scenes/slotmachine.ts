@@ -62,21 +62,6 @@ module scenes {
             // add background image to the scene
             this._slotmachineImage = new createjs.Bitmap(assets.getResult("SlotMachine"));
             this.addChild(this._slotmachineImage);
-        
-            //add Image Containers to the scene
-            /* for (var index = 0; index < config.Game.REELS; index++) {
-                 imageContainers[index] = new createjs.Container();
-                 stage.addChild(imageContainers[index]);
-             }
-     
-             //Specify the x and y coordinates of all the 3 containers
-             imageContainers[0].x = 108;
-             imageContainers[0].y = 190;
-             imageContainers[1].x = 201;
-             imageContainers[1].y = 190;
-             imageContainers[2].x = 296;
-             imageContainers[2].y = 190;  
-             */
 
             // add Bet1Button to the scene
             this._bet1Button = new objects.Button("Bet1Button", 108, 468, false);
@@ -141,23 +126,22 @@ module scenes {
             this._smiley.x = 428;
             this._smiley.y = 38;
             this.addChild(this._smiley);
-           
             
             // add this scene to the global stage container
             stage.addChild(this);
-
-
         }
 
         // SLOT_MACHINE Scene updates here
         public update(): void {
 
         }
-
+        /* Method to initialize the Bitmap Array */
         private _initializeReelsArray(): void {
             this._reels = new Array<createjs.Bitmap>();
+            
+            /* Iterate over all the 3 Reels */
             for (var i: number = 0; i < config.Game.REELS; i++) {
-                this._reels[i] = new createjs.Bitmap(assets.getResult("blank"));
+                this._reels[i] = new createjs.Bitmap(assets.getResult("blank"));    // Set all the 3 Reel images to blank
                 this._reels[i].x = 108 + (i * 94);
                 this._reels[i].y = 190;
                 this.addChild(this._reels[i]);
@@ -172,7 +156,7 @@ module scenes {
         }
         
         /* When this function is called it determines the betLine results.
-        e.g. Bar - Orange - Banana */
+        e.g. Cherry - Bells - Orange */
         private _spinReels(): string[] {
             var betLine = [" ", " ", " "];
             var outCome = [0, 0, 0];
@@ -326,15 +310,15 @@ module scenes {
             var random1 = Math.floor(Math.random() * 51 + 1);
             var random2 = Math.floor(Math.random() * 51 + 1);
 
-            if (random1 == random2) {                         // If both random numbers are same, the player won the Jackpot
+            if (random1 == random2) {                                           // If both random numbers are same, the player won the Jackpot
                 console.log("Jackpot Won")
-                createjs.Sound.play("JackpotWinSound");       // Play the Jackpot Win Sound
+                createjs.Sound.play("JackpotWinSound");                         // Play the Jackpot Win Sound
                 this._smiley.image = assets.getResult("JackpotSmiley");
-                this._resultMsgLabel.color = "#FFCC00";       // Change the color of Result Message Label to Yellow
+                this._resultMsgLabel.color = "#FFCC00";                         // Change the color of Result Message Label to Yellow
                 this._resultMsgLabel.text = "Congrats! You Won a Jackpot";      //Change the Text of Result Message Label
-                this._playerCredits += this._jackpot;         // Add the Jackpot Money to the Player Credits
-                this._win += this._jackpot;                    // Add the Jackpot Money to the Winnings of player
-                this._jackpot = 5000;                         // Again reset the Jackpot Money to 5000
+                this._playerCredits += this._jackpot;                           // Add the Jackpot Money to the Player Credits
+                this._win += this._jackpot;                                     // Add the Jackpot Money to the Winnings of player
+                this._jackpot = 5000;                                           // Again reset the Jackpot Money to 5000
             }
         }
     
@@ -343,29 +327,28 @@ module scenes {
             // reset player's bet to zero
             this._currentBet = 0;
             this._win = 0;
-            this._betLabel.text = "$" + this._currentBet.toString();
-            this._jackpotMoneyLabel.text = "$" + this._jackpot.toString();
-            this._playerCreditsLabel.text = "$" + this._playerCredits.toString();
+            this._betLabel.text = "$" + this._currentBet.toString();             //Display the current bet amount in the Bet Label
+            this._jackpotMoneyLabel.text = "$" + this._jackpot.toString();       //Display the jackpot amount in the Jacpot Label
+            this._playerCreditsLabel.text = "$" + this._playerCredits.toString();//Display the Player's Credit amount in the Player's Credits Label
 
         }
 
         private _makeBet(betAmount: number): void {
             this._spinResultLabel.text = "$" + this._win.toString();
             this._resultMsgLabel.text = "SPIN THE REEL";
-            this._smiley.image = assets.getResult("HappySmiley");
+            this._smiley.image = assets.getResult("HappySmiley");                          // Change the smiley image
             
             if (betAmount <= this._playerCredits) {
-                createjs.Sound.play("CoinSound");       // Play the coin sound on button clicked
+                createjs.Sound.play("CoinSound");                                           // Play the coin sound on button clicked
                 console.log("Bet " + betAmount + " Credit");
-                this._currentBet += betAmount;                   // Set the current bet of player
-                this._playerCredits -= betAmount;
-                this._betLabel.text = "$" + this._currentBet.toString();
-                this._playerCreditsLabel.text = "$" + this._playerCredits.toString();
+                this._currentBet += betAmount;                                              // Set the current bet of player
+                this._playerCredits -= betAmount;                                           // Deduct the Bet Amount from the Player's Credits
+                this._betLabel.text = "$" + this._currentBet.toString();                    // Display the Bet Amount in the Current Bet Label
+                this._playerCreditsLabel.text = "$" + this._playerCredits.toString();       // Display the updated Player Credits      
                 this._spinButton.mouseEnabled = (this._spinButton.mouseEnabled == false) ? true : this._spinButton.mouseEnabled;
-                //this._spinButton.mouseEnabled = true;
             }
-            else {
-                //this._spinButton.mouseEnabled = false;
+            /* If the Player is betting more than his/her Credit limit that display an alert message */
+            else {  
                 this._resultMsgLabel.color = "#FFFFFF";
                 this._resultMsgLabel.text = "Insufficient Money";
                 alert("Insufficient Money");
@@ -393,9 +376,11 @@ module scenes {
             this._resetAll();
             this._resetFruitWheel();
             this._displayPlayerAccount();
-            this._spinResultLabel.text = "$" + this._win.toString();
+            this._spinResultLabel.text = "$" + this._win.toString();        // Show the winning amount in the Spin Result Text Label
             this._resultMsgLabel.text = "Welcome Again";
-            this._smiley.image = assets.getResult("HappySmiley");
+            this._smiley.image = assets.getResult("HappySmiley");           // Change the smiley image
+            
+            /* Interate over the reels and display blank images in all the reels */
             for (var i = 0; i < config.Game.REELS; i++) {
                         this._reels[i].image = assets.getResult("blank");
                     }
@@ -411,21 +396,24 @@ module scenes {
         }
 
         private _spinButtonClick(event: createjs.MouseEvent): void {
-            var stop: number = 0;
+            var spinner: number = 0;
             var reel: number[] = [0, 0, 0];
-
+            
+            /* Ensure that the Bet Amount is not equal to 0 */
             if (this._currentBet == 0)
                 alert("Invalid Bet Amount");
-            else {
+            else {                                  // If Bet Amount is not zero then do this
+                this._disableAllButtons();
                 createjs.Sound.play("SpinnerSound");      // Play the Spinner sound on SPIN button clicked
                 var spinInterval: number = setInterval(() => {
                     for (var i = 0; i < config.Game.REELS; i++) {
-                        reel[i] = Math.floor(Math.random() * 8 + 1);
-                        this._reels[i].image = assets.getResult(reel[i].toString());
+                        reel[i] = Math.floor(Math.random() * 8 + 1);        // Generate a random number between 1 to 8
+                        this._reels[i].image = assets.getResult(reel[i].toString());  // Show that image whose number is generated
                     }
-                    stop += 1;
-                    if (stop >= 60) { clearInterval(spinInterval); }
-                }, 100);
+                    spinner += 1;
+                    if (spinner >= 60)
+                        clearInterval(spinInterval);        // Clear the interval time
+                }, 100);                    // 60 * 100 = 6000 = 6 sec (It means the spinner will spin upto 6 sec)
 
                 var bitmap: string[] = this._spinReels();
 
@@ -434,15 +422,33 @@ module scenes {
                     console.log(bitmap);
                     // Iterate over the number of reels
                     for (var i = 0; i < config.Game.REELS; i++) {
-                        this._reels[i].image = assets.getResult(bitmap[i]);
+                        this._reels[i].image = assets.getResult(bitmap[i]);     // Show the actual resultant images in the reel
                     }
-                    this._determineWinnings();
+                    this._determineWinnings();          
                     this._displayPlayerAccount();
+                     this._enableAllButtons();
                 }, 6000);
-
-
-            }
-
+               
+            }   
         }
+        
+        /* Method to disable all the buttons while spinning the reel */
+        private _disableAllButtons():void{
+                this._bet1Button.mouseEnabled = false;
+                this._bet50Button.mouseEnabled = false;
+                this._bet100Button.mouseEnabled = false;
+                this._resetButton.mouseEnabled = false;
+                this._spinButton.mouseEnabled = false;
+           }
+           
+        /* Method to enable all the buttons after spinning the reel */
+        private _enableAllButtons():void{
+                this._bet1Button.mouseEnabled = true;
+                this._bet50Button.mouseEnabled = true;
+                this._bet100Button.mouseEnabled = true;
+                this._resetButton.mouseEnabled = true;
+                this._spinButton.mouseEnabled = true;
+           }
+
     }
 }

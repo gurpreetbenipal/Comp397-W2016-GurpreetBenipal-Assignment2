@@ -1,6 +1,7 @@
 module objects {
     // Scene Class
     export class Scene extends createjs.Container {
+        
         // CONSTRUCTOR +++++++++++++++++++++++++++++
         constructor() {
             super();

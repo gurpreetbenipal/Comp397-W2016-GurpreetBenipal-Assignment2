@@ -35,20 +35,6 @@ var scenes;
             // add background image to the scene
             this._slotmachineImage = new createjs.Bitmap(assets.getResult("SlotMachine"));
             this.addChild(this._slotmachineImage);
-            //add Image Containers to the scene
-            /* for (var index = 0; index < config.Game.REELS; index++) {
-                 imageContainers[index] = new createjs.Container();
-                 stage.addChild(imageContainers[index]);
-             }
-     
-             //Specify the x and y coordinates of all the 3 containers
-             imageContainers[0].x = 108;
-             imageContainers[0].y = 190;
-             imageContainers[1].x = 201;
-             imageContainers[1].y = 190;
-             imageContainers[2].x = 296;
-             imageContainers[2].y = 190;
-             */
             // add Bet1Button to the scene
             this._bet1Button = new objects.Button("Bet1Button", 108, 468, false);
             this.addChild(this._bet1Button);
@@ -106,10 +92,12 @@ var scenes;
         // SLOT_MACHINE Scene updates here
         SlotMachine.prototype.update = function () {
         };
+        /* Method to initialize the Bitmap Array */
         SlotMachine.prototype._initializeReelsArray = function () {
             this._reels = new Array();
+            /* Iterate over all the 3 Reels */
             for (var i = 0; i < config.Game.REELS; i++) {
-                this._reels[i] = new createjs.Bitmap(assets.getResult("blank"));
+                this._reels[i] = new createjs.Bitmap(assets.getResult("blank")); // Set all the 3 Reel images to blank
                 this._reels[i].x = 108 + (i * 94);
                 this._reels[i].y = 190;
                 this.addChild(this._reels[i]);
@@ -122,7 +110,7 @@ var scenes;
             return (value >= lowerBounds && value <= upperBounds) ? value : -1;
         };
         /* When this function is called it determines the betLine results.
-        e.g. Bar - Orange - Banana */
+        e.g. Cherry - Bells - Orange */
         SlotMachine.prototype._spinReels = function () {
             var betLine = [" ", " ", " "];
             var outCome = [0, 0, 0];
@@ -281,25 +269,24 @@ var scenes;
             // reset player's bet to zero
             this._currentBet = 0;
             this._win = 0;
-            this._betLabel.text = "$" + this._currentBet.toString();
-            this._jackpotMoneyLabel.text = "$" + this._jackpot.toString();
-            this._playerCreditsLabel.text = "$" + this._playerCredits.toString();
+            this._betLabel.text = "$" + this._currentBet.toString(); //Display the current bet amount in the Bet Label
+            this._jackpotMoneyLabel.text = "$" + this._jackpot.toString(); //Display the jackpot amount in the Jacpot Label
+            this._playerCreditsLabel.text = "$" + this._playerCredits.toString(); //Display the Player's Credit amount in the Player's Credits Label
         };
         SlotMachine.prototype._makeBet = function (betAmount) {
             this._spinResultLabel.text = "$" + this._win.toString();
             this._resultMsgLabel.text = "SPIN THE REEL";
-            this._smiley.image = assets.getResult("HappySmiley");
+            this._smiley.image = assets.getResult("HappySmiley"); // Change the smiley image
             if (betAmount <= this._playerCredits) {
                 createjs.Sound.play("CoinSound"); // Play the coin sound on button clicked
                 console.log("Bet " + betAmount + " Credit");
                 this._currentBet += betAmount; // Set the current bet of player
-                this._playerCredits -= betAmount;
-                this._betLabel.text = "$" + this._currentBet.toString();
-                this._playerCreditsLabel.text = "$" + this._playerCredits.toString();
+                this._playerCredits -= betAmount; // Deduct the Bet Amount from the Player's Credits
+                this._betLabel.text = "$" + this._currentBet.toString(); // Display the Bet Amount in the Current Bet Label
+                this._playerCreditsLabel.text = "$" + this._playerCredits.toString(); // Display the updated Player Credits      
                 this._spinButton.mouseEnabled = (this._spinButton.mouseEnabled == false) ? true : this._spinButton.mouseEnabled;
             }
             else {
-                //this._spinButton.mouseEnabled = false;
                 this._resultMsgLabel.color = "#FFFFFF";
                 this._resultMsgLabel.text = "Insufficient Money";
                 alert("Insufficient Money");
@@ -322,9 +309,10 @@ var scenes;
             this._resetAll();
             this._resetFruitWheel();
             this._displayPlayerAccount();
-            this._spinResultLabel.text = "$" + this._win.toString();
+            this._spinResultLabel.text = "$" + this._win.toString(); // Show the winning amount in the Spin Result Text Label
             this._resultMsgLabel.text = "Welcome Again";
-            this._smiley.image = assets.getResult("HappySmiley");
+            this._smiley.image = assets.getResult("HappySmiley"); // Change the smiley image
+            /* Interate over the reels and display blank images in all the reels */
             for (var i = 0; i < config.Game.REELS; i++) {
                 this._reels[i].image = assets.getResult("blank");
             }
@@ -338,34 +326,52 @@ var scenes;
         };
         SlotMachine.prototype._spinButtonClick = function (event) {
             var _this = this;
-            var stop = 0;
+            var spinner = 0;
             var reel = [0, 0, 0];
+            /* Ensure that the Bet Amount is not equal to 0 */
             if (this._currentBet == 0)
                 alert("Invalid Bet Amount");
             else {
+                this._disableAllButtons();
                 createjs.Sound.play("SpinnerSound"); // Play the Spinner sound on SPIN button clicked
                 var spinInterval = setInterval(function () {
                     for (var i = 0; i < config.Game.REELS; i++) {
-                        reel[i] = Math.floor(Math.random() * 8 + 1);
-                        _this._reels[i].image = assets.getResult(reel[i].toString());
+                        reel[i] = Math.floor(Math.random() * 8 + 1); // Generate a random number between 1 to 8
+                        _this._reels[i].image = assets.getResult(reel[i].toString()); // Show that image whose number is generated
                     }
-                    stop += 1;
-                    if (stop >= 60) {
-                        clearInterval(spinInterval);
-                    }
-                }, 100);
+                    spinner += 1;
+                    if (spinner >= 60)
+                        clearInterval(spinInterval); // Clear the interval time
+                }, 100); // 60 * 100 = 6000 = 6 sec (It means the spinner will spin upto 6 sec)
                 var bitmap = this._spinReels();
                 setTimeout(function () {
                     console.log("Spin those reels!");
                     console.log(bitmap);
                     // Iterate over the number of reels
                     for (var i = 0; i < config.Game.REELS; i++) {
-                        _this._reels[i].image = assets.getResult(bitmap[i]);
+                        _this._reels[i].image = assets.getResult(bitmap[i]); // Show the actual resultant images in the reel
                     }
                     _this._determineWinnings();
                     _this._displayPlayerAccount();
+                    _this._enableAllButtons();
                 }, 6000);
             }
+        };
+        /* Method to disable all the buttons while spinning the reel */
+        SlotMachine.prototype._disableAllButtons = function () {
+            this._bet1Button.mouseEnabled = false;
+            this._bet50Button.mouseEnabled = false;
+            this._bet100Button.mouseEnabled = false;
+            this._resetButton.mouseEnabled = false;
+            this._spinButton.mouseEnabled = false;
+        };
+        /* Method to enable all the buttons after spinning the reel */
+        SlotMachine.prototype._enableAllButtons = function () {
+            this._bet1Button.mouseEnabled = true;
+            this._bet50Button.mouseEnabled = true;
+            this._bet100Button.mouseEnabled = true;
+            this._resetButton.mouseEnabled = true;
+            this._spinButton.mouseEnabled = true;
         };
         return SlotMachine;
     })(objects.Scene);
