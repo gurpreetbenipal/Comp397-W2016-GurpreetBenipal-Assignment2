@@ -15,8 +15,6 @@ var slotMachine: scenes.SlotMachine;
 var gameOver: scenes.GameOver;
 
 var assetData: objects.Asset[] = [
-    { id: "BackButton", src: "../../Assets/images/BackButton.png" },
-    { id: "Nextbutton", src: "../../Assets/images/Nextbutton.png" },
     { id: "StartButton", src: "../../Assets/images/StartButton.png" },
     { id: "StartOverButton", src: "../../Assets/images/StartOverButton.png" },
     { id: "SlotMachine", src: "../../Assets/images/SlotMachine.png" },
